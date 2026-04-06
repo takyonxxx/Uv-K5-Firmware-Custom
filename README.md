@@ -138,6 +138,10 @@ The repository includes a `.vscode` folder with pre-configured IntelliSense, bui
 - IntelliSense configured for ARM Cortex-M0 cross-compilation
 - Recommended extensions: C/C++, Makefile Tools, ARM Assembly, Cortex-Debug
 
+## Code Analysis
+
+For a detailed breakdown of flash/RAM usage, per-function sizes, feature flag costs, and recommendations on what can be disabled to free up space, see [ANALYSIS.md](ANALYSIS.md).
+
 ## License
 
 Apache License 2.0 — see [LICENSE](LICENSE).
