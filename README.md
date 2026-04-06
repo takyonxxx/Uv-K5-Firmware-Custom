@@ -142,6 +142,8 @@ The repository includes a `.vscode` folder with pre-configured IntelliSense, bui
 
 For a detailed breakdown of flash/RAM usage, per-function sizes, feature flag costs, and recommendations on what can be disabled to free up space, see [ANALYSIS.md](ANALYSIS.md).
 
+For a developer-oriented overview of the code architecture, source tree, execution flow, and key subsystems, see [DEVELOPER.md](DEVELOPER.md).
+
 ## Credits
 
 This firmware is built upon the work of:
