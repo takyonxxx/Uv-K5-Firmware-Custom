@@ -1,4 +1,4 @@
-# Firmware Code Analysis — Quansheng UV-K5/K6 Maren Fork
+# Firmware Code Analysis — Quansheng UV-K5/K6 Custom Fork
 
 ## Flash Budget
 
@@ -53,20 +53,20 @@
 
 Measured by disabling each feature individually and comparing text size:
 
-| Savings (bytes) | Feature Flag | Description | Recommendation |
+| Savings | Feature Flag | What It Does | Recommendation |
 |---|---|---|---|
-| 5,824 | ENABLE_SPECTRUM | Spectrum analyzer | **KEEP** — core feature |
-| 3,872 | ENABLE_FMRADIO | FM broadcast radio receiver | **CAN REMOVE** — saves most flash |
-| 2,532 | ENABLE_DTMF_CALLING | DTMF calling/contacts/groups | **CAN REMOVE** — rarely used in field |
-| 1,544 | ENABLE_UART | Serial UART communication | **KEEP** — needed for configuration |
-| 608 | ENABLE_SMALL_BOLD | Bold variant of small font | **CAN REMOVE** — 564 bytes font data |
-| 572 | ENABLE_VOX | Voice-activated transmit | **CAN REMOVE** — rarely needed |
-| 444 | ENABLE_AM_FIX | AM demodulator fix | **KEEP** — our improvement |
-| 320 | ENABLE_AUDIO_BAR | TX audio level bar | **CAN REMOVE** — cosmetic |
-| 316 | ENABLE_RSSI_BAR | RX signal strength bar | **KEEP** — useful visual feedback |
-| 268 | ENABLE_SCAN_RANGES | Scan range support in spectrum | **KEEP** — useful with spectrum |
-| 184 | ENABLE_FLASHLIGHT | Flashlight function | **CAN REMOVE** — minor utility |
-| 168 | ENABLE_BIG_FREQ | Large frequency display | **CAN REMOVE** — cosmetic |
+| 5,824 | ENABLE_SPECTRUM | Built-in spectrum analyzer. Shows RF activity across a frequency range as a waterfall-style bar graph. Supports peak hold, modulation switching, squelch trigger, and frequency input. | **KEEP** — core feature |
+| 3,872 | ENABLE_FMRADIO | FM broadcast radio receiver (76-108 MHz). Allows listening to commercial FM radio stations with channel memory and auto-scan. Completely separate from VHF/UHF ham operation. | **CAN REMOVE** — not needed for ham/airband/marine use |
+| 2,532 | ENABLE_DTMF_CALLING | DTMF "phone call" system: contact list, group calls, auto-answer, call notifications. Does NOT affect basic DTMF tone sending — repeater access (`*`, `#`, A-D tones) still works without this. | **CAN REMOVE** — rarely used, basic DTMF tones unaffected |
+| 1,544 | ENABLE_UART | Serial UART communication for PC configuration tools (CHIRP, CPS software), firmware commands, and EEPROM read/write over programming cable. | **KEEP** — needed for PC configuration |
+| 608 | ENABLE_SMALL_BOLD | Adds a bold variant of the small font (564 bytes of font data). Used for emphasis in menus and status display. Without it, all small text renders in regular weight. | **CAN REMOVE** — barely noticeable visual difference |
+| 572 | ENABLE_VOX | Voice-Operated Transmit. Automatically keys the transmitter when you speak into the microphone, hands-free operation. Requires threshold calibration per environment. | **CAN REMOVE** — most users prefer PTT button |
+| 444 | ENABLE_AM_FIX | Software AGC for AM reception. Dynamically adjusts RF front-end gain to prevent BK4819 AM demodulator saturation on strong signals. Our fork includes improved 4-sample averaging, adaptive hysteresis, and anti-pumping. | **KEEP** — our core improvement |
+| 320 | ENABLE_AUDIO_BAR | Shows a real-time audio level bar on screen during TX. Visual feedback for microphone input level. Cosmetic only, does not affect audio processing. | **CAN REMOVE** — cosmetic, no functional impact |
+| 316 | ENABLE_RSSI_BAR | Shows a signal strength (RSSI) bar on the main screen during RX. Visual indication of received signal level alongside the S-meter value. | **KEEP** — useful operational feedback |
+| 268 | ENABLE_SCAN_RANGES | Enables custom scan ranges in the spectrum analyzer. Allows defining start/stop frequencies for targeted spectrum sweeps instead of fixed bandwidth around center frequency. | **KEEP** — extends spectrum analyzer usefulness |
+| 184 | ENABLE_FLASHLIGHT | Toggles the radio's LED flashlight via side button. Three modes: on, blink, SOS. | **CAN REMOVE** — minor utility feature |
+| 168 | ENABLE_BIG_FREQ | Displays the frequency in a large font on the main screen. Without it, frequency uses the standard smaller font. | **CAN REMOVE** — cosmetic preference |
 
 ## Removal Priority (most flash saved, least functionality lost)
 

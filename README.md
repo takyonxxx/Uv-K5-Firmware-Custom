@@ -1,4 +1,4 @@
-# Quansheng UV-K5/K6 Custom Firmware — Maren Fork
+# Quansheng UV-K5/K6 Custom Firmware 
 
 Forked from [egzumer/uv-k5-firmware-custom](https://github.com/egzumer/uv-k5-firmware-custom).
 
@@ -79,7 +79,7 @@ pip install crcmod
 **4. Clone and build**
 
 ```
-git clone https://github.com/AeroMaren/uv-k5-firmware-custom.git
+git clone https://github.com/takyonxxx/uv-k5-firmware-custom.git
 cd uv-k5-firmware-custom
 win_make.bat
 ```
@@ -93,7 +93,7 @@ sudo apt update
 sudo apt install -y git make python3 python3-pip gcc-arm-none-eabi
 pip3 install crcmod
 
-git clone https://github.com/AeroMaren/uv-k5-firmware-custom.git
+git clone https://github.com/takyonxxx/uv-k5-firmware-custom.git
 cd uv-k5-firmware-custom
 make
 ```
@@ -104,7 +104,7 @@ make
 sudo pacman -S git make python python-pip arm-none-eabi-gcc arm-none-eabi-newlib
 pip install crcmod
 
-git clone https://github.com/AeroMaren/uv-k5-firmware-custom.git
+git clone https://github.com/takyonxxx/uv-k5-firmware-custom.git
 cd uv-k5-firmware-custom
 make
 ```
@@ -115,7 +115,7 @@ make
 brew install git python3 armmbed/formulae/arm-none-eabi-gcc
 pip3 install crcmod
 
-git clone https://github.com/AeroMaren/uv-k5-firmware-custom.git
+git clone https://github.com/takyonxxx/uv-k5-firmware-custom.git
 cd uv-k5-firmware-custom
 make
 ```
@@ -123,7 +123,7 @@ make
 ### Docker (any platform)
 
 ```bash
-git clone https://github.com/AeroMaren/uv-k5-firmware-custom.git
+git clone https://github.com/takyonxxx/uv-k5-firmware-custom.git
 cd uv-k5-firmware-custom
 ./compile-with-docker.sh
 ```
