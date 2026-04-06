@@ -1,0 +1,17 @@
+{
+    "files.associations": {
+        "*.h": "c",
+        "*.c": "c",
+        "*.S": "arm",
+        "*.ld": "plaintext"
+    },
+    "editor.tabSize": 4,
+    "editor.insertSpaces": false,
+    "files.exclude": {
+        "**/.git": true,
+        "**/*.o": true,
+        "**/*.d": true
+    },
+    "C_Cpp.errorSquiggles": "enabled",
+    "terminal.integrated.defaultProfile.windows": "PowerShell"
+}

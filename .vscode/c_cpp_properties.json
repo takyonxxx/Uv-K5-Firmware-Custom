@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "UV-K5 Firmware",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/external/CMSIS_5/CMSIS/Core/Include",
+                "${workspaceFolder}/external/CMSIS_5/Device/ARM/ARMCM0/Include",
+                "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/arm-none-eabi/include",
+                "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/lib/gcc/arm-none-eabi/10.3.1/include"
+            ],
+            "defines": [
+                "__ARMCM0",
+                "PRINTF_INCLUDE_CONFIG_H"
+            ],
+            "compilerPath": "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10/bin/arm-none-eabi-gcc.exe",
+            "cStandard": "c11",
+            "intelliSenseMode": "gcc-arm",
+            "compilerArgs": [
+                "-mcpu=cortex-m0"
+            ]
+        }
+    ],
+    "version": 4
+}
