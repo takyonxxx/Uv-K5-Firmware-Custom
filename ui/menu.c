@@ -31,6 +31,7 @@
 #include "../helper/battery.h"
 #include "../misc.h"
 #include "../settings.h"
+#include "../version.h"
 #include "helper.h"
 #include "inputbox.h"
 #include "menu.h"
@@ -123,6 +124,7 @@ const t_menu_item MenuList[] =
 	{"BatVol", VOICE_ID_INVALID,                       MENU_VOL           }, // was "VOL"
 	{"RxMode", VOICE_ID_DUAL_STANDBY,                  MENU_TDR           },
 	{"Sql",    VOICE_ID_SQUELCH,                       MENU_SQL           },
+	{"VER",    VOICE_ID_INVALID,                       MENU_VER           },
 
 	// hidden menu items from here on
 	// enabled if pressing both the PTT and upper side button at power-on
@@ -840,6 +842,10 @@ void UI_DisplayMenu(void)
 		case MENU_F2LONG:
 		case MENU_MLONG:
 			strcpy(String, gSubMenu_SIDEFUNCTIONS[gSubMenuSelection].name);
+			break;
+
+		case MENU_VER:
+			strcpy(String, Version);
 			break;
 
 	}
