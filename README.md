@@ -1,10 +1,10 @@
-# Quansheng UV-K5/K6 Custom Firmware (Maren Edition)
+# Quansheng UV-K5/K6 Custom Firmware (takyonxxx Edition)
 
 Forked from [egzumer/uv-k5-firmware-custom](https://github.com/egzumer/uv-k5-firmware-custom), which is a merge of [OneOfEleven custom firmware](https://github.com/OneOfEleven/uv-k5-firmware-custom) with [fagci spectrum analyzer](https://github.com/fagci/uv-k5-firmware-fagci-mod/tree/refactor). All based on [DualTachyon's open firmware](https://github.com/DualTachyon/uv-k5-firmware).
 
 > **Warning:** Use this firmware at your own risk (entirely). There is absolutely no guarantee that it will work in any way shape or form on your radio(s), it may even brick your radio(s), in which case, you'd need to buy another radio. Anyway, have fun.
 
-## Maren Custom Changes
+## takyonxxx Custom Changes
 
 ### Simplified Menu System
 
@@ -13,6 +13,8 @@ The menu has been reorganized into visible and hidden sections. Frequently used 
 **Visible menu (13 items):** Sql, Step, TxPwr, W/N, Demod, Mic, AM Fix, VOX, BatVol, BackLt, Beep, RxMode, VER
 
 **Hidden menu (moved from visible):** RxDCS, RxCTCS, TxDCS, TxCTCS, TxODir, TxOffs, BusyCL, Compnd, ChSave, ChDele, ChName, Scramb, ScAdd1/2, SList/1/2, ScnRev, F1Shrt/Long, F2Shrt/Long, M Long, KeyLck, TxTOut, BatSav, MicBar, ChDisp, POnMsg, BatTxt, BLMin/Max, BltTRX, Roger, STE, RP STE, 1 Call, all DTMF items, plus the original hidden items (F Lock, Tx 200/350/500, 350 En, ScraEn, FrCali, BatCal, BatTyp, Reset).
+
+**Accessing the hidden menu:** Turn off the radio. Press and hold both the **PTT button** and the **upper side button** simultaneously, then turn the radio on while keeping both buttons held. Release after the radio boots. The menu will now show all items including the hidden ones.
 
 ### Automatic AM Demodulation for Airband
 
@@ -176,7 +178,7 @@ This firmware is built upon the work of:
 - [OneOfEleven](https://github.com/OneOfEleven) — AM fix, fast scanning, and many improvements
 - [fagci](https://github.com/fagci) — spectrum analyzer
 - [egzumer](https://github.com/egzumer) — merged firmware with additional features
-- [Maren](https://github.com/takyonxxx) — menu simplification, airband auto-AM, spectrum rewrite, TX unlock
+- [takyonxxx](https://github.com/takyonxxx) — menu simplification, airband auto-AM, TX unlock
 
 ## License
 
