@@ -1,32 +1,52 @@
-# Quansheng UV-K5/K6 Custom Firmware 
+# Quansheng UV-K5/K6 Custom Firmware (Maren Edition)
 
 Forked from [egzumer/uv-k5-firmware-custom](https://github.com/egzumer/uv-k5-firmware-custom), which is a merge of [OneOfEleven custom firmware](https://github.com/OneOfEleven/uv-k5-firmware-custom) with [fagci spectrum analyzer](https://github.com/fagci/uv-k5-firmware-fagci-mod/tree/refactor). All based on [DualTachyon's open firmware](https://github.com/DualTachyon/uv-k5-firmware).
 
 > **Warning:** Use this firmware at your own risk (entirely). There is absolutely no guarantee that it will work in any way shape or form on your radio(s), it may even brick your radio(s), in which case, you'd need to buy another radio. Anyway, have fun.
 
-## Changes
+## Maren Custom Changes
 
-### Improved AM Fix
+### Simplified Menu System
 
-Three improvements to the `am_fix.c` module that reduces AM demodulator saturation/clipping. The original algorithm structure, gain table, and target RSSI (-89dBm) are preserved.
+The menu has been reorganized into visible and hidden sections. Frequently used items are immediately accessible, rarely used items are moved to the hidden menu (accessible by holding PTT + upper side button during power-on).
 
-**1. 4-Sample RSSI Sliding Window**
+**Visible menu (13 items):** Sql, Step, TxPwr, W/N, Demod, Mic, AM Fix, VOX, BatVol, BackLt, Beep, RxMode, VER
 
-The original code averaged only 2 RSSI samples (old + new), making it susceptible to single-sample spikes causing unnecessary gain changes. The improved code uses a 4-sample sliding window average. The 40ms window provides better spike immunity while still responding fast enough to real signal level changes.
+**Hidden menu (moved from visible):** RxDCS, RxCTCS, TxDCS, TxCTCS, TxODir, TxOffs, BusyCL, Compnd, ChSave, ChDele, ChName, Scramb, ScAdd1/2, SList/1/2, ScnRev, F1Shrt/Long, F2Shrt/Long, M Long, KeyLck, TxTOut, BatSav, MicBar, ChDisp, POnMsg, BatTxt, BLMin/Max, BltTRX, Roger, STE, RP STE, 1 Call, all DTMF items, plus the original hidden items (F Lock, Tx 200/350/500, 350 En, ScraEn, FrCali, BatCal, BatTyp, Reset).
 
-**2. Adaptive Hysteresis**
+### Automatic AM Demodulation for Airband
 
-The original code used a fixed -6dB hysteresis threshold. The improved code adapts based on signal proximity to saturation: -4dB hysteresis when the signal is well above the desired level (fast reaction to prevent distortion), -8dB when near or below (reduces gain hunting on fluctuating signals).
+Frequencies in the 118-136 MHz aviation band automatically switch to AM demodulation. This works in three places: when entering a frequency via keypad, when tuning with UP/DOWN in VFO mode, and when loading channels from EEPROM. Leaving the airband automatically returns to FM.
 
-**3. Slower Gain Recovery**
+### TX on All Frequencies
 
-The original code increased gain by one step every 10ms tick. This caused a "pumping" effect where gain would rapidly increase during brief pauses in AM modulation, then immediately drop again when audio returned. The improved code increases gain every 20ms (every other tick), resulting in smoother AM audio without pumping artifacts.
+The `TX_freq_check` function has been modified to allow transmission on all valid frequencies (BX4819 chip gap excluded). The `ENABLE_TX_WHEN_AM` flag is enabled, allowing TX in AM mode. Note that BK4819 hardware only supports FM modulation for TX regardless of the demod setting.
 
-### Spectrum Analyzer: Peak Hold
+### Spectrum Analyzer
 
-Added a peak hold trace to the spectrum analyzer display. A dotted line marks the highest signal level observed at each frequency bin since the last scan reset. This makes it easy to spot brief or intermittent transmissions that would otherwise be missed between scan sweeps. The peak hold resets automatically when changing frequency range, scan step, or step count.
+The original fagci spectrum analyzer is retained with peak hold functionality. Access via the assigned side button.
 
-Implementation uses a compact `uint8_t` Y-position array (128 bytes RAM) instead of storing full RSSI values, keeping flash usage minimal on the already tight 60KB budget.
+### Recommended Airband Frequencies (Ankara)
+
+For testing AM reception on the aviation band (118-136 MHz, auto-AM enabled):
+- 118.100 — Esenboğa TWR (Tower)
+- 119.100 — Esenboğa Approach
+- 121.500 — International emergency frequency
+- 121.800 — Esenboğa Ground
+- 124.000 — Ankara ATIS (continuous automated broadcast, best for testing)
+- 127.800 — Ankara ACC (Area Control)
+
+### Version String Fix
+
+The version string in the menu has been split across two lines so it fits the 128px wide display without truncation.
+
+### Demodulation Menu Renamed
+
+The demodulation type menu item has been renamed from "Demodu" to "Demod" for clarity.
+
+## Improved AM Fix (from upstream)
+
+Three improvements to the `am_fix.c` module that reduces AM demodulator saturation/clipping. The original algorithm structure, gain table, and target RSSI (-89dBm) are preserved: 4-sample RSSI sliding window, adaptive hysteresis, and slower gain recovery to prevent pumping artifacts.
 
 ## Flashing the Firmware
 
@@ -41,50 +61,49 @@ Implementation uses a compact `uint8_t` Y-position array (128 bytes RAM) instead
 
 ## Building from Source
 
-### Windows
+### Windows (Recommended)
 
-**1. Install required tools**
+**1. Install ARM Toolchain**
 
-Open Command Prompt or PowerShell and run:
+Download and install `gcc-arm-none-eabi-10.3-2021.10-win32.exe` from [ARM Developer](https://developer.arm.com/downloads/-/gnu-rm). Default install path: `C:\Program Files (x86)\GNU Arm Embedded Toolchain\10 2021.10\`
 
-```
-winget install -e -h git.git Python.Python.3.8
-winget install -e -h Arm.GnuArmEmbeddedToolchain -v "10 2021.10"
-```
+**2. Install GNU Make**
 
-Install GNU Make via Chocolatey (run PowerShell as Administrator):
+Download and install `gnu_make-3.81.exe` from [GnuWin32](https://gnuwin32.sourceforge.net/packages/make.htm). Default install path: `C:\Program Files (x86)\GnuWin32\`
 
-```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-choco install make -y
-```
+**3. Install Python 3**
 
-**2. Add ARM toolchain to PATH**
-
-The installer may not add the toolchain to PATH automatically. If `arm-none-eabi-gcc --version` is not recognized, add it manually:
-
-```powershell
-$env:PATH += ";C:\Program Files (x86)\GNU Arm Embedded Toolchain\10 2021.10\bin"
-[Environment]::SetEnvironmentVariable("PATH", $env:PATH, "User")
-```
-
-Close and reopen your terminal after this step.
-
-**3. Install Python dependencies**
+Download from [python.org](https://www.python.org/downloads/). During installation, check **"Add python.exe to PATH"**. After install:
 
 ```
-pip install crcmod
+python -m pip install crcmod
 ```
 
-**4. Clone and build**
+**4. Build**
+
+Edit `win_make.bat` and verify the three PATH lines match your install locations:
+
+```bat
+@set "PATH=C:\Users\YOUR_USER\AppData\Local\Programs\Python\Python3XX;%PATH%"
+@set "PATH=C:\Users\YOUR_USER\AppData\Local\Programs\Python\Python3XX\Scripts;%PATH%"
+@set "PATH=C:\Program Files (x86)\GNU Arm Embedded Toolchain\10 2021.10\bin;%PATH%"
+@set "PATH=C:\Program Files (x86)\GNU Arm Embedded Toolchain\10 2021.10\arm-none-eabi\bin;%PATH%"
+@set "PATH=C:\Program Files (x86)\GnuWin32\bin;%PATH%"
+```
+
+Then run:
 
 ```
-git clone https://github.com/takyonxxx/uv-k5-firmware-custom.git
-cd uv-k5-firmware-custom
 win_make.bat
 ```
 
-The output file is `firmware.packed.bin`.
+Output files: `firmware.bin` and `firmware.packed.bin`
+
+**Common issues:**
+- `'make' is not recognized` — GnuWin32 not installed or not in PATH
+- `'arm-none-eabi-gcc' not found` — ARM toolchain not installed or PATH mismatch in `win_make.bat`
+- `'python' not recognized` — Python not in PATH. Find your Python install location and update the PATH in `win_make.bat`
+- `PYTHON NOT FOUND, *.PACKED.BIN WON'T BE BUILT` — Python PATH not set before `make` runs. Ensure Python PATH lines are at the top of `win_make.bat`
 
 ### Linux (Ubuntu/Debian)
 
@@ -130,13 +149,18 @@ cd uv-k5-firmware-custom
 
 On Windows use `compile-with-docker.bat` instead.
 
-## VS Code Setup (Optional)
+## Modified Files Summary
 
-The repository includes a `.vscode` folder with pre-configured IntelliSense, build tasks, and recommended extensions for comfortable development:
-
-- **Ctrl+Shift+B** to build firmware
-- IntelliSense configured for ARM Cortex-M0 cross-compilation
-- Recommended extensions: C/C++, Makefile Tools, ARM Assembly, Cortex-Debug
+| File | Changes |
+|------|---------|
+| `win_make.bat` | Fixed PATH quoting, added Python path |
+| `ui/menu.c` | Menu reorganization (visible/hidden), renamed Demod |
+| `version.c` | Version string split to two lines |
+| `radio.c` | Auto AM for airband 118-136 MHz on channel load |
+| `app/main.c` | Auto AM for airband on keypad entry and VFO tuning |
+| `app/spectrum.c` | Original (unchanged) |
+| `frequencies.c` | TX allowed on all frequencies |
+| `Makefile` | `ENABLE_TX_WHEN_AM = 1` |
 
 ## Code Analysis
 
@@ -152,6 +176,7 @@ This firmware is built upon the work of:
 - [OneOfEleven](https://github.com/OneOfEleven) — AM fix, fast scanning, and many improvements
 - [fagci](https://github.com/fagci) — spectrum analyzer
 - [egzumer](https://github.com/egzumer) — merged firmware with additional features
+- [Maren](https://github.com/takyonxxx) — menu simplification, airband auto-AM, spectrum rewrite, TX unlock
 
 ## License
 

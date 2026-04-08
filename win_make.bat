@@ -20,43 +20,32 @@
 
 :: You may need to edit/change these three paths to suit your setup
 ::
-:: Temporarily add the compiler and make program directories to the system PATH ..
+:: Temporarily add the compiler, make, and python directories to the system PATH ..
 ::
-@set PATH="C:\Program Files (x86)\GNU Arm Embedded Toolchain\10 2021.10\bin";%PATH%
-@set PATH="C:\Program Files (x86)\GNU Arm Embedded Toolchain\10 2021.10\arm-none-eabi\bin";%PATH%
-@set PATH="C:\Program Files (x86)\GnuWin32\bin\";%PATH%
+@set "PATH=C:\Users\turka\AppData\Local\Programs\Python\Python313;%PATH%"
+@set "PATH=C:\Users\turka\AppData\Local\Programs\Python\Python313\Scripts;%PATH%"
+@set "PATH=C:\Program Files (x86)\GNU Arm Embedded Toolchain\10 2021.10\bin;%PATH%"
+@set "PATH=C:\Program Files (x86)\GNU Arm Embedded Toolchain\10 2021.10\arm-none-eabi\bin;%PATH%"
+@set "PATH=C:\Program Files (x86)\GnuWin32\bin;%PATH%"
+
+:: Install crcmod if needed (only needs to run once)
+::
+python -m pip install --quiet crcmod 2>nul
 
 :: Do the compile
 ::
 make clean
 make
 
-
-:: If you have python installed, you can create a 'packed' .bin from the compiled firmware.bin file.
-:: The Quansheng windows upload-to-radio program requires a 'packed' .bin file.
+:: If Makefile couldn't find python, create packed bin manually
 ::
-:: if you don't have python installed, then you can still upload the standard unpacked firmware.bin
-:: file another way ...
-::
-:: I wrote a GUI version of k5prog to do this easily in windows ..
-::    https://github.com/OneOfEleven/k5prog-win
-
-
-
-:: One of these two lines simply install the required python module if you want to create the packed
-:: firmware bin file, either only needs running once, ever.
-::
-::python  -m pip install --upgrade pip crcmod
-::python3 -m pip install --upgrade pip crcmod
-
-
-
-:: show the compiled .bin file size
-::
-::arm-none-eabi-size firmware
-
-
-
+if exist firmware.bin (
+    if not exist firmware.packed.bin (
+        echo.
+        echo Creating firmware.packed.bin ...
+        python fw-pack.py firmware.bin EGZUMER CUSTOM firmware.packed.bin
+    )
+)
 
 pause
 @echo on
