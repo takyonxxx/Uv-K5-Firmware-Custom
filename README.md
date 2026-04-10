@@ -16,9 +16,17 @@ The menu has been reorganized into visible and hidden sections. Frequently used 
 
 **Accessing the hidden menu:** Turn off the radio. Press and hold both the **PTT button** and the **upper side button** simultaneously, then turn the radio on while keeping both buttons held. Release after the radio boots. The menu will now show all items including the hidden ones.
 
-### Automatic AM Demodulation for Airband
+### Automatic Demodulation by Frequency
 
-Frequencies in the 118-136 MHz aviation band automatically switch to AM demodulation. This works in three places: when entering a frequency via keypad, when tuning with UP/DOWN in VFO mode, and when loading channels from EEPROM. Leaving the airband automatically returns to FM.
+The radio automatically selects the correct demodulation mode based on frequency:
+
+| Frequency Range | Mode | Usage |
+|----------------|------|-------|
+| Below 30 MHz | USB | HF / Shortwave bands |
+| 118 - 136 MHz | AM | Aviation airband |
+| All other frequencies | FM | VHF/UHF radio |
+
+This works in three places: when entering a frequency via keypad, when tuning with UP/DOWN in VFO mode, and when loading channels from EEPROM. The mode can still be changed manually via the Demod menu item.
 
 ### TX on All Frequencies
 
@@ -178,7 +186,7 @@ This firmware is built upon the work of:
 - [OneOfEleven](https://github.com/OneOfEleven) — AM fix, fast scanning, and many improvements
 - [fagci](https://github.com/fagci) — spectrum analyzer
 - [egzumer](https://github.com/egzumer) — merged firmware with additional features
-- [takyonxxx](https://github.com/takyonxxx) — menu simplification, airband auto-AM, TX unlock
+- [takyonxxx](https://github.com/takyonxxx) — menu simplification, auto demodulation (airband AM, HF USB), TX unlock
 
 ## License
 

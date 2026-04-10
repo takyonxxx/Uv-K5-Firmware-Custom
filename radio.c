@@ -349,9 +349,11 @@ void RADIO_ConfigureChannel(const unsigned int VFO, const unsigned int configure
 
 	pVfo->freq_config_RX.Frequency = frequency;
 
-	// auto AM for airband 118-136 MHz
+	// auto modulation by frequency
 	if (frequency >= 11800000 && frequency < 13600000)
-		pVfo->Modulation = MODULATION_AM;
+		pVfo->Modulation = MODULATION_AM;    // airband 118-136 MHz
+	else if (frequency < 3000000)
+		pVfo->Modulation = MODULATION_USB;   // HF shortwave below 30 MHz
 
 	if (frequency >= frequencyBandTable[BAND2_108MHz].upper && frequency < frequencyBandTable[BAND2_108MHz].upper)
 		pVfo->TX_OFFSET_FREQUENCY_DIRECTION = TX_OFFSET_FREQUENCY_DIRECTION_OFF;

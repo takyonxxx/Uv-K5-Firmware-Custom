@@ -373,10 +373,12 @@ static void MAIN_Key_DIGITS(KEY_Code_t Key, bool bKeyPressed, bool bKeyHeld)
 
 			gTxVfo->freq_config_RX.Frequency = Frequency;
 
-			// auto AM for airband 118-136 MHz
+			// auto modulation by frequency
 			if (Frequency >= 11800000 && Frequency < 13600000) {
 				gTxVfo->Modulation = MODULATION_AM;
-			} else if (gTxVfo->Modulation == MODULATION_AM) {
+			} else if (Frequency < 3000000) {
+				gTxVfo->Modulation = MODULATION_USB;
+			} else if (gTxVfo->Modulation != MODULATION_FM) {
 				gTxVfo->Modulation = MODULATION_FM;
 			}
 
@@ -648,15 +650,21 @@ static void MAIN_Key_UP_DOWN(bool bKeyPressed, bool bKeyHeld, int8_t Direction)
 				gTxVfo->freq_config_RX.Frequency = frequency;
 				BK4819_SetFrequency(frequency);
 
-				// auto AM for airband 118-136 MHz
+				// auto modulation by frequency
 				if (frequency >= 11800000 && frequency < 13600000) {
 					if (gTxVfo->Modulation != MODULATION_AM) {
 						gTxVfo->Modulation = MODULATION_AM;
 						RADIO_SetModulation(MODULATION_AM);
 						RADIO_SetupAGC(true, false);
 					}
+				} else if (frequency < 3000000) {
+					if (gTxVfo->Modulation != MODULATION_USB) {
+						gTxVfo->Modulation = MODULATION_USB;
+						RADIO_SetModulation(MODULATION_USB);
+						RADIO_SetupAGC(false, false);
+					}
 				} else {
-					if (gTxVfo->Modulation == MODULATION_AM) {
+					if (gTxVfo->Modulation != MODULATION_FM) {
 						gTxVfo->Modulation = MODULATION_FM;
 						RADIO_SetModulation(MODULATION_FM);
 						RADIO_SetupAGC(false, false);
