@@ -648,7 +648,7 @@ void UI_DisplayMain(void)
 			case MODULATION_FM: {
 				const FREQ_Config_t *pConfig = (mode == VFO_MODE_TX) ? vfoInfo->pTX : vfoInfo->pRX;
 				const unsigned int code_type = pConfig->CodeType;
-				const char *code_list[] = {"", "CT", "DCS", "DCR"};
+				const char *code_list[] = {"FM", "CT", "DCS", "DCR"};
 				if (code_type < ARRAY_SIZE(code_list))
 					s = code_list[code_type];
 				break;
