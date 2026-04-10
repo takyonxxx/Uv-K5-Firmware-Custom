@@ -586,10 +586,19 @@ void RADIO_SetupRegisters(bool switchToForeground)
 	#endif
 	BK4819_SetFrequency(Frequency);
 
-	BK4819_SetupSquelch(
-		gRxVfo->SquelchOpenRSSIThresh,    gRxVfo->SquelchCloseRSSIThresh,
-		gRxVfo->SquelchOpenNoiseThresh,   gRxVfo->SquelchCloseNoiseThresh,
-		gRxVfo->SquelchCloseGlitchThresh, gRxVfo->SquelchOpenGlitchThresh);
+	if (gRxVfo->Modulation != MODULATION_FM) {
+		// AM/USB: noise-based squelch unreliable, use RSSI-only
+		// keep RSSI thresholds from calibration, disable noise/glitch detection
+		BK4819_SetupSquelch(
+			gRxVfo->SquelchOpenRSSIThresh,    gRxVfo->SquelchCloseRSSIThresh,
+			127,                               127,
+			255,                               255);
+	} else {
+		BK4819_SetupSquelch(
+			gRxVfo->SquelchOpenRSSIThresh,    gRxVfo->SquelchCloseRSSIThresh,
+			gRxVfo->SquelchOpenNoiseThresh,   gRxVfo->SquelchCloseNoiseThresh,
+			gRxVfo->SquelchCloseGlitchThresh, gRxVfo->SquelchOpenGlitchThresh);
+	}
 
 	BK4819_PickRXFilterPathBasedOnFrequency(Frequency);
 
@@ -853,13 +862,22 @@ void RADIO_SetModulation(ModulationMode_t modulation)
 	BK4819_WriteRegister(BK4819_REG_3D, modulation == MODULATION_USB ? 0 : 0x2AAB);
 	BK4819_SetRegValue(afcDisableRegSpec, modulation != MODULATION_FM);
 
+	// AM: set +6dB post-demod gain in REG_43 bit 2 for better weak signal audio
+	if (modulation == MODULATION_AM) {
+		uint16_t reg43 = BK4819_ReadRegister(BK4819_REG_43);
+		BK4819_WriteRegister(BK4819_REG_43, reg43 | (1u << 2));
+	} else {
+		uint16_t reg43 = BK4819_ReadRegister(BK4819_REG_43);
+		BK4819_WriteRegister(BK4819_REG_43, reg43 & ~(1u << 2));
+	}
+
 	RADIO_SetupAGC(modulation == MODULATION_AM, false);
 }
 
 void RADIO_SetupAGC(bool listeningAM, bool disable)
 {
 	static uint8_t lastSettings;
-	uint8_t newSettings = (listeningAM << 1) | (disable << 1);
+	uint8_t newSettings = (listeningAM << 1) | disable;
 	if(lastSettings == newSettings)
 		return;
 	lastSettings = newSettings;

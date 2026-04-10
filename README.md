@@ -54,6 +54,16 @@ The version string in the menu has been split across two lines so it fits the 12
 
 The demodulation type menu item has been renamed from "Demodu" to "Demod" for clarity.
 
+### FM/AM Demodulation Improvements
+
+Three fixes to improve FM and AM reception quality:
+
+**AGC bit bug fix:** The `RADIO_SetupAGC` function had a bug where the `disable` parameter was ORed to the same bit position as `listeningAM`, effectively ignoring the disable flag. This caused the AGC to get stuck in wrong states during mode transitions.
+
+**AM +6dB post-demod gain:** BK4819 REG_43 bit 2 is now enabled in AM mode, adding 6dB gain after FM demodulation. AM signals are inherently weaker than FM at the demodulator output, so this boost makes weak AM stations (like airband) noticeably more audible. The gain is automatically disabled when switching back to FM.
+
+**AM RSSI-only squelch:** In AM and USB modes, noise and glitch squelch thresholds are now disabled (set to maximum pass-through values). Only RSSI-based squelch remains active. AM has a fundamentally different noise profile than FM — the noise-based squelch was causing erratic opening/closing behavior on AM signals. RSSI-only squelch provides stable, predictable squelch behavior for AM reception.
+
 ## Improved AM Fix (from upstream)
 
 Three improvements to the `am_fix.c` module that reduces AM demodulator saturation/clipping. The original algorithm structure, gain table, and target RSSI (-89dBm) are preserved: 4-sample RSSI sliding window, adaptive hysteresis, and slower gain recovery to prevent pumping artifacts.
@@ -186,7 +196,7 @@ This firmware is built upon the work of:
 - [OneOfEleven](https://github.com/OneOfEleven) — AM fix, fast scanning, and many improvements
 - [fagci](https://github.com/fagci) — spectrum analyzer
 - [egzumer](https://github.com/egzumer) — merged firmware with additional features
-- [takyonxxx](https://github.com/takyonxxx) — menu simplification, auto demodulation (airband AM, HF USB), TX unlock
+- [takyonxxx](https://github.com/takyonxxx) — menu simplification, auto demodulation (airband AM, HF USB), FM/AM demod improvements, TX unlock
 
 ## License
 
