@@ -56,13 +56,13 @@ The demodulation type menu item has been renamed from "Demodu" to "Demod" for cl
 
 ### FM/AM Demodulation Improvements
 
-Three fixes to improve FM and AM reception quality:
+Two fixes to improve AM reception quality:
 
 **AGC bit bug fix:** The `RADIO_SetupAGC` function had a bug where the `disable` parameter was ORed to the same bit position as `listeningAM`, effectively ignoring the disable flag. This caused the AGC to get stuck in wrong states during mode transitions.
 
 **AM +6dB post-demod gain:** BK4819 REG_43 bit 2 is now enabled in AM mode, adding 6dB gain after FM demodulation. AM signals are inherently weaker than FM at the demodulator output, so this boost makes weak AM stations (like airband) noticeably more audible. The gain is automatically disabled when switching back to FM.
 
-**AM RSSI-only squelch:** In AM and USB modes, noise and glitch squelch thresholds are now disabled (set to maximum pass-through values). Only RSSI-based squelch remains active. AM has a fundamentally different noise profile than FM — the noise-based squelch was causing erratic opening/closing behavior on AM signals. RSSI-only squelch provides stable, predictable squelch behavior for AM reception.
+Squelch in AM mode uses the original BK4819 hardware squelch with all three detection methods (RSSI + noise + glitch). This was found to work better than software-based or RSSI-only approaches after extensive testing.
 
 ## Improved AM Fix (from upstream)
 
@@ -196,7 +196,7 @@ This firmware is built upon the work of:
 - [OneOfEleven](https://github.com/OneOfEleven) — AM fix, fast scanning, and many improvements
 - [fagci](https://github.com/fagci) — spectrum analyzer
 - [egzumer](https://github.com/egzumer) — merged firmware with additional features
-- [takyonxxx](https://github.com/takyonxxx) — menu simplification, auto demodulation (airband AM, HF USB), FM/AM demod improvements, TX unlock
+- [takyonxxx](https://github.com/takyonxxx) — menu simplification, auto demodulation (airband AM, HF USB), AM demod improvements (AGC fix, +6dB gain), FM indicator on main screen, TX unlock
 
 ## License
 

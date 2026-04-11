@@ -586,19 +586,10 @@ void RADIO_SetupRegisters(bool switchToForeground)
 	#endif
 	BK4819_SetFrequency(Frequency);
 
-	if (gRxVfo->Modulation != MODULATION_FM) {
-		// AM/USB: noise-based squelch unreliable, use RSSI-only
-		// keep RSSI thresholds from calibration, disable noise/glitch detection
-		BK4819_SetupSquelch(
-			gRxVfo->SquelchOpenRSSIThresh,    gRxVfo->SquelchCloseRSSIThresh,
-			127,                               127,
-			255,                               255);
-	} else {
-		BK4819_SetupSquelch(
-			gRxVfo->SquelchOpenRSSIThresh,    gRxVfo->SquelchCloseRSSIThresh,
-			gRxVfo->SquelchOpenNoiseThresh,   gRxVfo->SquelchCloseNoiseThresh,
-			gRxVfo->SquelchCloseGlitchThresh, gRxVfo->SquelchOpenGlitchThresh);
-	}
+	BK4819_SetupSquelch(
+		gRxVfo->SquelchOpenRSSIThresh,    gRxVfo->SquelchCloseRSSIThresh,
+		gRxVfo->SquelchOpenNoiseThresh,   gRxVfo->SquelchCloseNoiseThresh,
+		gRxVfo->SquelchCloseGlitchThresh, gRxVfo->SquelchOpenGlitchThresh);
 
 	BK4819_PickRXFilterPathBasedOnFrequency(Frequency);
 
